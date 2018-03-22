@@ -1,0 +1,206 @@
+<div id="cart-details"  class="wrapper wrapper-content cart-details" data-id="{{Id}}">
+    <div class="col-lg-8">        
+        <div class="ibox  border-left-right border-bottom">
+            <div class="ibox-title">
+                <span class="pull-right">(<strong class="order-items">{{OrderItems}}</strong>) pozycji</span>
+                <h5>Pozycje w koszyku</h5>
+            </div>            
+            <div class="cart-items-container">
+                {% for article in Articles %}
+                <div id="cart-item-{{article.Order_item_id}}" class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table shoping-cart-table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="product-image-box">
+                                            <img class="image" alt="{{article.Name}}" src="/Article/GetImageByOfferId?offerId={{article.Offer_id}}">
+                                        </div>
+                                    </td>
+                                    <td class="desc">
+                                        <h3>
+                                            <a href="/Towar/{{article.Id}}" class="product-name">
+                                                {{article.Name}}
+                                            </a>
+                                        </h3>
+                                        <!--<p class="small">
+                                    It is a long established fact that a reader will be distracted by the readable
+                                    content of a page when looking at its layout. The point of using Lorem Ipsum is
+                                </p>
+                                <dl class="small m-b-none">
+                                    <dt>Description lists</dt>
+                                    <dd>A description list is perfect for defining terms.</dd>
+                                </dl>-->
+                                        <div class="m-t-sm">
+                                            <!--<a href="#" class="text-muted"><i class="fa fa-gift"></i> Add gift package</a>
+                                    |-->
+                                            <a href="javascript:void(0);" data-id="{{article.Order_item_id}}" class="text-muted remove-article"><i class="fa fa-trash"></i> Usuń pozycję</a>
+                                        </div>
+                                        <span class="help-block m-b-none text-danger available-quantity-alert" style="{% if article.Show_available_quantity_alert == false %} display:none; {% endif %}">Wybrana ilość przekracza dostępny stan. Czas realizacji może wynieść x dni.</span>
+                                    </td>
+                                    <td style="min-width:90px;">
+                                        <span>{{article.Price}} {{CurrencyTypeName}}</span>
+                                        <!--<s class="small text-muted">{{article.Stock_price}}</s>-->
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div>
+                                                <input id="ordered-quantity-{{article.Order_item_id}}" data-id="{{article.Order_item_id}}" type="text" class="form-control ordered-quantity" placeholder="1" value="{{article.Ordered_quantity}}" style="width:70px;">
+                                            </div>
+                                            <script type="text/javascript">
+                                                $('#ordered-quantity-{{article.Order_item_id}}').TouchSpin({
+                                                    min: 1,
+                                                    max: 1000000,
+                                                    step: 1,
+                                                    boostat: 5,
+                                                    maxboostedstep: 10
+                                                    , verticalbuttons: true
+                                                });
+                                            </script>
+                                            <span class="input-group-addon">z {{article.Quantity}}</span>
+                                        </div>
+                                    </td>
+                                    <td style="min-width:100px;">
+                                        <label>Łącznie</label>
+                                        <br />
+                                        <span><label class="total-price">{{article.Total_price}}</label> <label>{{CurrencyTypeName}}</label></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>        
+            <div class="ibox-content">
+                <button class="btn btn-primary pull-right go-to-summary"><i class="fa fa fa-shopping-cart"></i> Zamawiam</button>
+                <div class="btn-group">
+                    <a href="/Towary" class="btn btn-white "><i class="fa fa-arrow-left"></i> Wróć do zakupów</a>
+                    <a href="javascript:void(0);" class="btn btn-primary send-offer"><i class="fa fa-paper-plane"></i> Wyślij "Ofertę"</a>
+                </div>                
+            </div>
+        </div>
+        <div class="ibox float-e-margins border-left-right border-bottom ">
+            <div class="ibox-title">
+                <p class="font-bold">Powiązane produkty</p>
+            </div>
+            <div class="ibox-content products-min">                
+                <div class="col-lg-12 no-padding">
+                    <div class="row">
+                            {% for article in RelatedArticles %}
+                            <div class="col-lg-3">
+                                <div class="file-box" style="width:100%;">
+                                    <div class="file" style="width:100%;">
+                                        <a title="{{article.Name}}" href="/Towar/{{article.Id}}">
+                                            <!--<span class="corner"></span>-->
+                                            <div class="image">
+                                                <img alt="{{article.Name}}" class="product-min-image" src="/Article/GetImageByOfferId?offerId={{article.Offer_id}}">
+                                            </div>
+                                            <div class="file-name truncate">
+                                                {{article.Name}}
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins border-left-right border-bottom m-b-sm">           
+            <div class="ibox-content">                                
+                <div class="input-group m-b-n-sm">
+                    <input type="text" placeholder="Kod rabatowy" class="form-control discount-code" data-id="{{Id}}"> <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary realize-discound-code">
+                            Realizuj kod
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="ibox float-e-margins border-left-right border-bottom m-b-sm">
+            <div class="ibox-title">
+                <p class="font-bold">Podsumowanie</p>
+            </div>
+            <div class="ibox-content">
+                <table id="summary-table" class="table m-b-none summary-table" data-url="/Cart/GetSummary" data-cartid="{{Id}}"></table>
+                <div class="preloader" style="height:100px; display:none;">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $('#summary-table').getCartSummary({});
+                </script>
+                <!--<hr>-->
+                <!--<span class="text-muted small">
+            *For United States, France and Germany applicable sales tax will be applied
+        </span>-->
+                <div class="m-t-md">
+                    <div class="btn-group">
+                        <a href="javascript:void(0);" class="btn btn-primary btn-sm go-to-summary"><i class="fa fa-shopping-cart"></i> Zamów</a>
+                        <a href="#" class="btn btn-white btn-sm"> Anuluj</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox float-e-margins border-left-right border-bottom m-b-sm">
+            <div class="ibox-content">                
+                <form id="additional-summary-data" action="javascript:void(0);" class="form-horizontal" method="post" novalidate="novalidate">                    
+                    <span class="field-validation-valid text-danger" data-valmsg-for="DeliveryMethod" data-valmsg-replace="true"></span>
+                    <select title="Rodzaj transportu" name="DeliveryMethod" class="form-control m-b-sm" aria-required="false" data-val="true" data-val-number="Wartość dla pola Rodzaj transportu musi być liczbą" data-val-required="Pole Rodzaj transportu jest wymagane." placeholder="Wybierz z listy">
+                        <option value="">-- Wybierz rodzaj transportu --</option>
+                        {% for listItem in DeliveryMethods %}
+                            <option {% if listItem.Selected == true %} selected="selected" {% endif %} value="{{listItem.Value}}">{{listItem.Text}}</option>
+                        {% endfor %}
+                    </select>                    
+                    <!--<span class="help-block m-b-none">Wybierz rodzaj transportu</span>-->
+                    <input name="Id" value="{{ID}}" type="text" style="display:none;">
+                    <div class="m-b-sm">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="InternalOrderCode" data-valmsg-replace="true"></span>
+                        <input id="InternalOrderCode" name="InternalOrderCode" value="{{InternalOrderCode}}" title="Wewnętrzny numer zamówienia" placeholder="Wewnętrzny numer zamówienia:" class="form-control valid" data-val="true" data-val-length="Pole Wewnętrzny numer zamówienia musi być ciągiem o maksymalnej długości 50." data-val-length-max="50" aria-required="false" aria-invalid="false" aria-describedby="Code-error" type="text">                        
+                    </div>                    
+                    <span class="field-validation-valid text-danger" data-valmsg-for="OrderComment" data-valmsg-replace="true"></span>
+                    <textarea id="OrderComment" name="OrderComment" rows="5" title="Uwagi" placeholder="Uwagi:" class="form-control valid" data-val="true" data-val-length="Pole Uwagi musi być ciągiem o maksymalnej długości 1000." data-val-length-max="1000" aria-required="false" aria-invalid="false" aria-describedby="Code-error" type="text" style="resize: vertical;">{{OrderComment}}</textarea>                    
+                </form>
+            </div>
+        </div>
+        <div class="ibox float-e-margins border-left-right border-bottom m-b-sm">
+            <div class="ibox-title">
+                <p class="font-bold">Te produkty mogą Cię zainteresować</p>
+            </div>
+            <div class="ibox-content products-min">
+                <div class="col-lg-12 no-padding">
+                    <div class="row">
+                        {% for article in UpSellArticles %}
+                        <div class="col-lg-6">
+                            <div class="file-box" style="width:100%;">
+                                <div class="file" style="width:100%;">
+                                    <a title="{{article.Name}}" href="/Towar/{{article.Id}}">
+                                        <!--<span class="corner"></span>-->
+                                        <div class="image">
+                                            <img alt="{{article.Name}}" class="product-min-image" src="/Article/GetImageByOfferId?offerId={{article.Offer_id}}">
+                                        </div>
+                                        <div class="file-name truncate">
+                                            {{article.Name}}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}                         
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#cart-details').cartDetails({ additionalDataFormSel: '#additional-summary-data', cartSummarySel: '#summary-table' });    
+</script>
