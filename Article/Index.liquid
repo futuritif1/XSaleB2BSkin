@@ -1,0 +1,283 @@
+<div class="wrapper wrapper-content article-wrapper">    
+    <div class="col-lg-3 menu-column category-filter-column">
+        <div class="ibox category-box m-b-sm">
+            <div class="category-box-content">
+                <div class="ibox-title ">
+                    <h5 class=""><i class="fa fa-sitemap"></i> Kategorie</h5>
+                </div>
+                <div id="category-menu" onmouseenter="MenuColumn.mouseEnter(this);" onmouseleave="MenuColumn.mouseLeave(this);"
+                      class="ibox-content p-w-xs">
+                    <div class="dd category-tree" id="category-tree">
+                        <ol class="dd-list">
+                            {% for category in Categories %}
+                            <li class="dd-item" data-id="{{category.Id}}" data-urlname="{{category.Url_name}}">
+                                <div class="dd-handle" onmouseenter="CategoryPreview.mouseEnter(this);" onmouseleave="CategoryPreview.mouseOut(this);">
+                                    <span class="label label-info"><i class="fa fa-star"></i></span> {{category.Name}}
+                                </div>
+                                {% if  category.Has_child == true %}
+                                    <ol class="dd-list"></ol> 
+                                {% endif %}                                                                
+                            </li>
+                            {% endfor %}                            
+                        </ol>
+                    </div>                    
+                </div>            
+            </div>
+        </div>
+        <div class="ibox filter-box">
+            <div class="filter-box-content">
+                <div class="ibox-title">
+                    <h5><i class="fa fa-filter"></i> Filtry</h5>
+                </div>
+                <div id="filter-menu" class="ibox-content p-xs">                                        
+                        <!--
+                    Typy filtrów
+                    Text = 1,
+                    Int = 2,
+                    Decimal = 3,
+                    Datetime = 4,
+                    Combobox = 5,
+                    RadioButton = 6,
+                    CheckBox = 7,
+                    TextArea = 8,
+                    Date = 9-->
+                    {% for filter in Filters %}
+                    <div class="form-group filter-item" id="filter-{{filter.Parameter_id}}" data-id="{{filter.Parameter_id}}" data-range="{{filter.Range}}" data-type="{{filter.Type}}">
+                        <label class="font-bold ">{{filter.Name}}</label>                        
+                            {% if filter.Type == 6 and filter.Radio_button_multi_values != blank  %}
+                            <button type="button" class="btn btn-default btn-xs pull-right clear-filter">Wyczyść <i class="fa fa-times-circle"></i></button>
+                            {% endif  %}                                             
+                        {% if  filter.Type == 1 or filter.Type == 8 %}
+                            <input type="text" class="form-control" value="{{filter.String_value}}">
+                        {% endif %}
+                        {% if  filter.Type == 2 %}
+                            {% if  filter.Range == true %}
+                                <div class="input-group">
+                                    <div>
+                                        <input type="text" placeholder="_" class="input-s-lg form-control from" value="{{filter.Int_value}}">
+                                    </div>
+                                    <span class="input-group-addon">do</span>
+                                    <div>
+                                        <input type="text" placeholder="_" class="input-s-lg form-control to" value="{{filter.Int_value_to}}">
+                                    </div>
+                                    <script type="text/javascript">
+                                        $('#filter-{{filter.Parameter_id}} input[type="text"].from').TouchSpin({
+                                                min: -1000000,
+                                                max: 1000000,
+                                                step: 1,
+                                                boostat: 5,
+                                                maxboostedstep: 10
+                                                ,verticalbuttons: true
+                                        });
+                                        $('#filter-{{filter.Parameter_id}} input[type="text"].to').TouchSpin({
+                                            min: -1000000,
+                                            max: 1000000,
+                                            step: 1,
+                                            boostat: 5,
+                                            maxboostedstep: 10
+                                                ,verticalbuttons: true
+                                        });
+                                    </script>
+                                </div>
+                            {% else %}
+                                <input type="text" placeholder="_" class="input-sm form-control equals" value="{{filter.Int_value}}">
+                                <script type="text/javascript">
+                                            $('#filter-{{filter.Parameter_id}} input[type="text"].equals').TouchSpin({
+                                                min: -1000000,
+                                                max: 1000000,
+                                                step: 1,                                        
+                                                boostat: 5,
+                                                maxboostedstep: 10
+                                            });
+                                </script>
+                            {% endif %}
+                        {% endif %}   
+                        {% if  filter.Type == 3 %}
+                            {% if  filter.Range == true %}
+                                <div class="input-group">
+                                    <div>
+                                        <input type="text" placeholder="_.__" class="input-s-lg form-control from dot-format" value="{{filter.Decimal_value_display}}">
+                                    </div>
+                                    <span class="input-group-addon">do</span>
+                                    <div>
+                                        <input type="text" placeholder="_.__" class="input-s-lg form-control to dot-format" value="{{filter.Decimal_value_display_to}}">
+                                    </div>
+                                    <script type="text/javascript">
+                                        $('#filter-{{filter.Parameter_id}} input[type="text"].from').TouchSpin({
+                                            min: -1000000,
+                                            max: 1000000,
+                                            step: 0.1,
+                                            decimals: 2,
+                                            boostat: 5,
+                                            maxboostedstep: 10
+                                                ,verticalbuttons: true
+                                        });
+                                        $('#filter-{{filter.Parameter_id}} input[type="text"].to').TouchSpin({
+                                            min: -1000000,
+                                            max: 1000000,
+                                            step: 0.1,
+                                            decimals: 2,
+                                            boostat: 5,
+                                            maxboostedstep: 10
+                                                ,verticalbuttons: true
+                                        });
+                                    </script>
+                                </div>
+                            {% else %}
+                                <input type="text" placeholder="_.__" class="input-sm form-control equals dot-format" value="{{filter.Decimal_value_display}}">
+                                <script type="text/javascript">
+                                    $('#filter-{{filter.Parameter_id}} input[type="text"].equals').TouchSpin({
+                                        min: -1000000,
+                                        max: 1000000,
+                                        step: 0.1,
+                                        decimals: 2,
+                                        boostat: 5,
+                                        maxboostedstep: 10
+                                    });
+                                </script>
+                            {% endif %}
+                        {% endif %}   
+                        {% if  filter.Type == 4 or filter.Type == 9 %}
+                            {% if  filter.Range == true %}
+                                <div class="input-group">                                                                        
+                                    <input class="form-control from" placeholder="__.__.____" id="Input-{{filter.Parameter_id}}" data-val="true" data-val-date="Pole '{{filter.Name}}' musi mieć format daty" data-val-required="{{filter.Name}} zakupu jest wymagane." name="Input-{{filter.Parameter_id}}" value="{{filter.Date_time_value}}" type="text">
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            var $picker = $('#Input-{{filter.Parameter_id}}');
+                                            var currentValue = $picker.val();
+                                            $picker.val(null);
+                                            var momentValue = null;
+                                            if (currentValue !== null && currentValue.trim() != '') {
+                                                momentValue = moment(currentValue, 'L LTS');
+                                            }
+                                            else {
+                                                momentValue = null
+                                            }
+                                            var datepickerDefaults = {
+                                                locale: 'pl',
+                                                useCurrent: false,
+                                                defaultDate: momentValue,
+                                                format: 'L'
+                                            };
+                                            $picker.datetimepicker(datepickerDefaults);
+                                            $(document).on('dp.change', '#Input-{{filter.Parameter_id}}', function (e) { $('').trigger('keyup'); })
+                                        });
+                                    </script>
+                                    <span class="input-group-addon">do</span>                                                                       
+                                    <input class="form-control to" placeholder="__.__.____" id="Input-to-{{filter.Parameter_id}}" data-val="true" data-val-date="Pole '{{filter.Name}}' musi mieć format daty" data-val-required="{{filter.Name}} zakupu jest wymagane." name="Input-to-{{filter.Parameter_id}}" value="{{filter.Date_time_value_to}}" type="text">
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            var $picker = $('#Input-to-{{filter.Parameter_id}}');
+                                            var currentValue = $picker.val();
+                                            $picker.val(null);
+                                            var momentValue = null;
+                                            if (currentValue !== null && currentValue.trim() != '') {
+                                                momentValue = moment(currentValue, 'L LTS');
+                                            }
+                                            else {
+                                                momentValue = null
+                                            }
+                                            var datepickerDefaults = {
+                                                locale: 'pl',
+                                                useCurrent: false,
+                                                defaultDate: momentValue,
+                                                format: 'L'
+                                            };
+                                            $picker.datetimepicker(datepickerDefaults);
+                                            $(document).on('dp.change', '#Input-to-{{filter.Parameter_id}}', function (e) { $('').trigger('keyup'); })
+                                        });
+                                    </script>
+                                </div>
+                            {% else %}
+                                <div class="input-group" id="DateContainer-{{filter.Parameter_id}}">
+                                        <input class="form-control equals" placeholder="__.__.____" id="Input-{{filter.Parameter_id}}" data-val="true" data-val-date="Pole '{{filter.Name}}' musi mieć format daty" data-val-required="{{filter.Name}} zakupu jest wymagane." name="Input-{{filter.Parameter_id}}" value="{{filter.Date_time_value}}" type="text">
+                                        <span class="input-group-btn"><button type="button" class="btn btn-primary datepickerbutton"><i class="fa fa-calendar"></i></button></span>
+                                    </div>
+                                    <span class="field-validation-valid" data-valmsg-for="Input-{{filter.Parameter_id}}" data-valmsg-replace="true"></span>
+                                    <script type="text/javascript">                                                                                
+                                        $(document).ready(function () {
+                                            var $picker = $('#DateContainer-{{filter.Parameter_id}}');
+                                            var currentValue = $picker.find('input').val();
+                                            $picker.find('input').val(null);
+                                            var momentValue = null;
+                                            if (currentValue !== null && currentValue.trim() != '') {
+                                                momentValue = moment(currentValue, 'L LTS');
+                                            }
+                                            else {
+                                                momentValue = null
+                                            }
+                                            var datepickerDefaults = {
+                                                locale: 'pl',
+                                                useCurrent: false,
+                                                defaultDate: momentValue,
+                                                format: 'L'
+                                            };
+                                            $picker.datetimepicker(datepickerDefaults);
+                                            $(document).on('dp.change', '#DateContainer-{{filter.Parameter_id}}', function (e) { $('').trigger('keyup'); })
+                                        });
+                                    </script>                                
+                            {% endif %}
+                        {% endif %}    
+                        {% if  filter.Type == 5  %}
+                        <select class="form-control" data-val="true"  data-val-number="Wartość dla pola {{filter.Name}} musi być liczbą" data-val-required="Pole {{filter.Name}} jest wymagane."   placeholder="Wybierz z listy">
+                            <option value="">-- Wybierz {{filter.Name}} --</option>
+                            {% for listItem in filter.Select_list_items %}                            
+                            <option {% if  listItem.Selected == true %} selected="selected" {% endif %} value="{{listItem.Value}}">{{listItem.Text}}</option>                            
+                            {% endfor %}
+                        </select>
+                        {% endif %} 
+                        {% if  filter.Type == 6  %}
+                        <div class="form-group">                           
+                                {% for radioButton in filter.Radio_button_multi_values %}
+                                <div class="radio radio-primary  m-t-xxs">
+                                    <input type="radio" id="radio-{{filter.Parameter_id}}-{{radioButton.Value}}" value="{{radioButton.Value}}" name="radio-{{filter.Parameter_id}}" {% if radioButton.Selected == true" %} checked="checked" {% endif %}>
+                                    <label for="radio-{{filter.Parameter_id}}-{{radioButton.Value}}"> {{radioButton.Text}} </label>
+                                </div>                                                          
+                                {% endfor %}
+                        </div>
+                        {% endif %}  
+                        {% if  filter.Type == 7  %}                        
+                        <div class="form-group">                                                        
+                                {% for checkBox in filter.Check_box_multi_values %}
+                                <div class="checkbox checkbox-primary  m-t-xxs" style="">
+                                    <input type="checkbox" id="checkbox-{{filter.Parameter_id}}-{{checkBox.Value}}" value="{{checkBox.Value}}" name="checkBox-{{filter.Parameter_id}}" {% if checkBox.Selected == true" %} checked="checked" {% endif %}>
+                                    <label for="checkbox-{{filter.Parameter_id}}-{{checkBox.Value}}"> {{checkBox.Text}} </label>
+                                </div>                                                                                        
+                                {% endfor %}
+                        </div>
+                        {% endif %}              
+                    </div>
+                    {% endfor %}                    
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div id="article-grid" data-url="/Article/GetAtricleGrid" data-pagesize="28" data-columnnumber="4" data-itemwidth="3" class="col-lg-9">
+    </div>
+</div>
+<div class="col-sm-12 contact-box grid-preloader-prototype" style="display:none;">
+    <div class="col-sm-12 text-center">
+        <small class="font-bold">Ładowanie elementów...</small>
+    </div>
+</div>
+<div id="category-preview" onmouseenter="CategoryPreview.windowMouseEnter(this);" onmouseleave="CategoryPreview.windowMouseOut(this);" 
+     class="category-preview-box p-h-xs p-w-xs" style="display:none;">
+</div>
+<div id="category-preview-grid" class="col-lg-12 category-preview-grid" data-url="/Article/GetAtricleGrid?GetPromotedArticles=true"
+     data-pagesize="8" data-limit="8" data-columnnumber="4" data-itemwidth="3" style="display:none;">
+</div>
+<div class="col-sm-12 contact-box  category-preloader-prototype" style="display:none;">
+    <div class="col-sm-12 text-center">
+        <small class="font-bold">Ładowanie elementów...</small>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#filter-menu').filterMenu({articleGridSel: '#article-grid'});
+        $('#category-menu').categoryMenu({ categoryBranchIds: {{CategoryBranchIds}} });
+        $('#article-grid').collection({ 
+            preloaderPrototypeSel: '.grid-preloader-prototype', selectedCategoryId: {% if  CategoryId != null %} {{CategoryId}} {% else %} null {% endif %},
+        filterSel: '#filter-menu', scaleToWindowHeight: true,search: '{{Search}}'
+        });    
+    });
+</script>

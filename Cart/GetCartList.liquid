@@ -1,0 +1,41 @@
+
+{% for cart in Carts %}
+<li class="cart-container">
+    <a class="cart-instance" href="javascript:void(0);">
+        
+        <div >              
+                <span class="radio radio-primary">
+                    <input  type="radio" id="select-cart-{{cart.Id}}" value="{{cart.Id}}" {% if  cart.Selected == true %} checked="checked" {% endif %} name="select-cart-{{cart.Id}}">
+                    <label title="Wybierz koszyk" for="select-cart-{{cart.Id}}">&nbsp; </label>
+                </span>            
+            <span class="description" data-cartid="{{cart.Id}}" title="Przejdź do koszyka">
+                {% if  cart.My_cart == true %}
+                <i class="fa fa-cart-plus"></i>
+                Mój koszyk
+                {% else %}
+                <i class="fa fa-envelope fa-user-circle"></i>
+                {{cart.User_name}}
+                {% endif %}                 
+            </span>         
+            <span class="pull-right m-t-xs small label label-primary" title="Dodane towary">{{cart.Cart_items}}</span>
+            {% if  cart.My_cart == true %}
+            <span class="pull-right m-t-xs m-r-sm remove-cart label label-warning" data-cartid="{{cart.Id}}" title="Usuń koszyk"><i class="fa fa-trash-o "></i></span>   
+            {% endif %}            
+            <!--<button type="button" class="pull-right m-t-xxs m-r-sm btn remove-cart btn-warning btn-xs pull-right clear-filter">-->
+            <!--<i class="fa fa-trash-o"></i>-->
+            <!--</button>-->
+        </div>
+    </a>
+</li>
+<li class="divider"></li>
+{% endfor %}
+<!--<li class="cart-container">
+    <a class="cart-instance" href="javascript:void(0);">
+        <div>
+            <i class="fa fa-envelope fa-user-circle"></i> Koszyk mail@mail.pl
+            <span class="pull-right m-t-xs small label label-primary">5</span>
+            <span class="pull-right m-t-xs m-r-sm remove-cart label label-warning"><i class="fa fa-trash-o "></i></span>
+        </div>
+    </a>
+</li>
+<li class="divider"></li>-->

@@ -1,0 +1,66 @@
+{% if  Articles == blank %}
+<div class="col-sm-12 contact-box grid-preloader-prototype">
+    <div class="col-sm-12 text-center">
+        <small class="font-bold">Nie znaleziono towarów dla wybranego filtra</small>
+    </div>
+</div>
+    {% endif %}
+    {% for article in Articles %}
+    {% if  article.Open_row == true %}
+    <div class="row">
+        {% endif %}
+        <div class="col-md-{{article.Item_width}}">
+            <div class="ibox">
+                <div class="ibox-content product-box">
+                    <!--<div class="select-check-container checkbox checkbox-primary">
+                        <input class="select-check" data-val="true" id="IncludeRelizationTime" name="Compare" type="checkbox" value="{{article.Id}}">             
+                    </div>-->
+                    <div class="select-check-container checkbox checkbox-primary checkbox-inline m-t-xxs">
+                        <input type="checkbox" id="select-article-{{article.Id}}" value="{{article.Id}}" name="select-article-{{article.Id}}">
+                        <label for="select-article-{{article.Id}}">&nbsp;</label>
+                    </div>
+                    <div class="product-image-box">
+                        <img class="image" alt="image" {% if article.Offer_id == null %} src="/Content/Assets/article.png" {% else %} src="/Article/GetImageByOfferId?offerId={{article.Offer_id}}" {% endif %}>
+                    </div>
+                    <div class="product-desc">
+                        <span class="product-price">
+                            {% if  article.Price == null %}
+                            -
+                            {% else %}
+                            {{article.Price}} {{CurrencyTypeName}}
+                            {% endif %}
+                        </span>
+                        <small class="text-muted">{{article.Code}}</small>
+                        <small class="text-muted">{{article.EAN}}</small>
+                        <div id="trun-{{article.guid}}" class="" style="max-height:66px;">
+                            <a href="/Towar/{{article.Id}}" class="product-name"> {{article.Name}} </a>
+                        </div>
+                        <script type="text/javascript">
+                            $("#trun-{{article.guid}}").dotdotdot({
+                            watch: 'window',
+                            wrap: 'letter'
+                        });
+                        </script>
+                        <div class="small m-t-xs">
+                            {{article.Variant}}
+                        </div>
+                        <div class="row m-t-xs">
+                            <div class="col-md-12">
+                                <div class="btn-group pull-right add-to-cart-container">
+                                    <button class="btn btn-white btn-sm available-stock-state" title="Dostępne">{% if article.Quantity == null %} 0 {% else %} {{article.Quantity}} {% endif %} </button>
+                                    <button class="btn btn-white btn-sm order-quantity-container">
+                                        <input class="quantity add-to-cart-quantity" type="text" name="orderQuantity" placeholder="1">
+                                    </button>
+                                    <button class="btn btn-primary btn-sm add-to-cart" data-articleid="{{article.Id}}"><i class="fa fa-cart-plus"></i> Do koszyka</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if  article.Close_row == true %}
+    </div>
+    {% endif %}
+    {% endfor %}
+
